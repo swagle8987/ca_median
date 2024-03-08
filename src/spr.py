@@ -41,8 +41,14 @@ def calculate_spr_sites(gene_tree, base_tree, prune_node, cost_function):
     taxn_ns = TaxonNamespace(taxa_lim)
     label_lim  = [i.label for i in taxa_lim]
     for g in gene_tree:
-        pruned_gene_tree = deepcopy(g.extract_tree_with_taxa_labels(labels = label_lim))
-        pruned_gene_tree.taxon_namespace = taxn_ns
+        try:
+            pruned_gene_tree = deepcopy(g)
+            leftover_taxa = [i.label for i in g.poll_taxa() if i.label not in label_lim]
+            if len(leftover_taxa)>0:
+                pruned_gene_tree.retain_taxa_with_labels(label_lim)
+        except:
+            pdb.set_trace()
+        pruned_gene_tree.reconstruct_taxon_namespace()
         pruned_gene_trees.append(pruned_gene_tree)
     pruned_gene_trees.taxon_namespace = taxn_ns
     distance = float('inf')

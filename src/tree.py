@@ -1,4 +1,4 @@
-from dendropy import Tree,Node
+from dendropy import Tree,Node,Taxon
 class CustomNode(Node):
     
     def __init__(self,id=0,**kwargs):
@@ -23,15 +23,9 @@ class CustomTree(Tree):
         for i,v in enumerate(self.nodes()):
             v.id = i+self.counter
 
+    def regenerate_taxon(self):
+        for v in self.leaf_nodes():
+            v.taxon = Taxon()
+            v.taxon.label = v.label
+        self.reconstruct_taxon_namespace()
 
-"""
-
-So when we do spr we do the following:
-1. copy_tree = t1.extract_tree(node_factory=lambda x:return CustomNode(x))
-2. spr(tree,prune_node,attach_node):
-    
-2. new_node = Custom
-    p_n = tree.find_node(lambda x:x.id==prune_node.id)
-    tree.prune_subtree(p_n)
-    attach_above_node(tree,p_n,attach_node)
-"""

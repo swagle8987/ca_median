@@ -3,7 +3,7 @@ import pdb
 import argparse
 import random
 from spr import add_node_above,calculate_spr_sites, calculate_spr_neighborhood
-from dendropy import TreeList,Tree,Node,TaxonNamespace
+from dendropy import TreeList,Tree,Node,TaxonNamespace,Taxon
 from tree import CustomTree,CustomNode
 
 def sym_cluster_affinity_cost(t1,t2):
@@ -12,7 +12,8 @@ def sym_cluster_affinity_cost(t1,t2):
     return (t1t2 + t2t1)/2
 
 def build_starting_tree(gene_trees,cost_function):
-    taxa = gene_trees.taxon_namespace._taxa[:]
+    taxa = set([i.label for i in gene_trees.taxon_namespace._taxa[:]])
+    taxa = [Taxon(i) for i in taxa]
     random.shuffle(taxa)
     tree = CustomTree()
     seed = CustomNode(0)
@@ -45,7 +46,9 @@ def build_starting_tree(gene_trees,cost_function):
 
 def load_trees(path):
     TreeList.DEFAULT_TREE_TYPE=CustomTree
-    vals = TreeList.get(path=path,schema="newick",rooting="force-rooted")
+    vals = TreeList.get(path=path,schema="newick",rooting="force-rooted",suppress_internal_node_taxa=True,suppress_leaf_node_taxa=True)
+    for g in vals:
+        g.regenerate_taxon()
     return vals
 
 def find_median_tree(path,cutoff,stat=False):

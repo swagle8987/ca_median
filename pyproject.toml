@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 dependencies = ["dendropy","numpy","cluster_affinity"]
 version = "0.0.1"
+name="ca_median"
 authors = [
 	{name="Sanket Wagle", email="swagle@iastate.edu"}
 ]
