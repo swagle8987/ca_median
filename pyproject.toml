@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+dependencies = ["dendropy","numpy","cluster_affinity"]
+version = "0.0.1"
+authors = [
+	{name="Sanket Wagle", email="swagle@iastate.edu"}
+]
+description="A tool to calculate the median tree based on cluster affinity"
+
+[project.scripts]
+ca_median = "main:main"
